@@ -14,6 +14,11 @@ services:
       REDIS_PORT: 6379
       CRON_TIME: "0230"
       DELETE_FILE_AFTER_DAYS: 1
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
   redis:
     image: redis:7-alpine
@@ -21,6 +26,10 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --save 60 1 --appendonly yes
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
 volumes:
   redis_data:
