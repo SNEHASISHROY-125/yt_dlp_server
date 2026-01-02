@@ -1,0 +1,8 @@
+# sys dependencies
+# deno
+
+fastapi 
+uvicorn 
+redis 
+yt-dlp 
+aiofiles

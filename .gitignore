@@ -1,0 +1,8 @@
+notify.py
+jobs.py
+tst.py
+storage/*
+.env
+__pycache__
+storage
+test*
