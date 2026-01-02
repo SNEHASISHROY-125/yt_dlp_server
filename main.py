@@ -5,7 +5,6 @@ from fastapi.responses import FileResponse
 import uuid, json, os
 
 from downloader import fetch_metadata, download_audio
-# from jobs import load_jobs, save_jobs
 
 from utils import new_token , url_hash
 from redis_client import redis_client
@@ -14,8 +13,6 @@ from cleanup import start_cleanup_cron_job
 from token_generator import gen_token_32
 import asyncio , time
 import secrets
-
-# secrets.token_hex
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,6 +24,8 @@ async def lifespan(app: FastAPI):
             mapping={ADMIN_KEY : "ADMIN"}
         ) ; print("ADMIN KEY SET TO : ",ADMIN_KEY)
     await start_cleanup_cron_job()
+    print("starting cron...")
+    yield
 
 app = FastAPI(lifespan=lifespan)
 
@@ -37,18 +36,6 @@ os.chmod("notify.sh", 0o755)
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-## Deprecated
-# async def set_admin():
-#     await redis_client.hset(
-#         "API_KEYS",
-#         mapping={"1b582762a1066253af4c53b74019645944841d1948419f4d86334eeb58d0ed52" : "ADMIN"}
-#     )
-
-# @app.on_event("startup")
-# async def startup():
-#     print("API started")
-#     await set_admin()
-##  *   ##
 
 async def verify_key(x_api_key: str = Header(...)):
     if x_api_key not in await redis_client.hgetall("API_KEYS"):
