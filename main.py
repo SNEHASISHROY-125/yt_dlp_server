@@ -132,6 +132,8 @@ async def download(token: str):
     job = await redis_client.hgetall(f"job:{token}")
     if not job or job["status"] != "completed":
         return {"error": "not ready"}
+    
+    file_name = os.path.basename(job.get("audio_path","downloads/"+token))
 
-    return FileResponse(job["audio_path"], media_type="audio/mpeg")
+    return FileResponse(job["audio_path"], media_type="audio/mpeg", filename=file_name)
 
